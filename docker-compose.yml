@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./test0_back
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  web:
+    build:
+      context: ./test0_front
+      dockerfile: Dockerfile
+    ports:
+      - "8082:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - CORS_ORIGIN=http://212.23.211.54:8082,http://localhost:8082
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
